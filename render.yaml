@@ -1,0 +1,24 @@
+# Render Blueprint: George's Nappies on the FREE plan.
+# Website + web app + API + WebSockets run as one Docker web service.
+# Database: Neon (free PostgreSQL). Paste its connection string as DATABASE_URL when Render asks.
+# Uploaded images/files are stored in the database (STORAGE_BACKEND=database): the free plan has no disk.
+services:
+  - type: web
+    name: georges-nappies
+    runtime: docker
+    plan: free               # sleeps after ~15 idle minutes; the app keeps it awake while open
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: STORAGE_BACKEND
+        value: database
+      # Neon connection string, e.g. postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+      # Link to the Windows installer (a GitHub release asset) for the website's Download button.
+      - key: DOWNLOAD_URL
+        sync: false

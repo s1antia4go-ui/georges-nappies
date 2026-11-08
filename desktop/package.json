@@ -1,0 +1,39 @@
+{
+  "name": "georges-nappies-desktop",
+  "productName": "George's Nappies",
+  "version": "1.1.0",
+  "description": "George's Nappies messaging app for Windows",
+  "author": "Santiago Rojas",
+  "main": "main.js",
+  "private": true,
+  "serverUrl": "https://georgesnappies.tailb9c54f.ts.net",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.georgesnappies.desktop",
+    "productName": "George's Nappies",
+    "copyright": "Made by Santiago Rojas",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["main.js", "package.json", "build/icon.png"],
+    "win": { "target": ["nsis"], "icon": "build/icon.png", "publisherName": "Santiago Rojas" },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "include": "build/installer.nsh",
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "George's Nappies",
+      "uninstallDisplayName": "George's Nappies",
+      "artifactName": "GeorgesNappies-Setup.exe",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

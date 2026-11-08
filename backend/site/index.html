@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>George's Nappies: messaging, without the noise</title>
+  <meta name="description" content="George's Nappies is a calm, private messenger for you and your friends. Download for Windows." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/brand.woff2" as="font" type="font/woff2" crossorigin />
+  <style>
+    @font-face {
+      font-family: "Inter";
+      src: url("/fonts/inter.woff2") format("woff2");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    /* Brand typeface: logo and headlines. */
+    @font-face {
+      font-family: "Nappies Display";
+      src: url("/fonts/brand.woff2") format("woff2");
+      font-weight: 200 800;
+      font-stretch: 75% 100%;
+      font-display: swap;
+    }
+    .brand, h1, h2, .step h3, .card h3 {
+      font-family: "Nappies Display", "Inter", sans-serif;
+      font-stretch: 88%;
+    }
+    .brand { font-weight: 780 !important; letter-spacing: -0.04em !important; }
+    :root {
+      --ink: #0b0b0c;
+      --ink-2: #3a3a3d;
+      --muted: #6e6e73;
+      --faint: #a1a1a6;
+      --line: #ececee;
+      --soft: #f6f6f7;
+      --bg: #ffffff;
+      --green: #22c55e;
+      --radius: 22px;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", "Segoe UI", -apple-system, system-ui, sans-serif;
+      font-feature-settings: "cv11", "ss01";
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      letter-spacing: -0.011em;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- nav ---------- */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s;
+    }
+    header.scrolled { border-color: var(--line); }
+    nav { height: 68px; display: flex; align-items: center; gap: 32px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 1.2rem; letter-spacing: -0.035em; }
+    .mark { width: 30px; height: 30px; border-radius: 9px; background: var(--ink); display: grid; place-items: center; }
+    .navlinks { display: flex; gap: 28px; font-size: .92rem; color: var(--muted); }
+    .navlinks a:hover { color: var(--ink); }
+    .nav-cta { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      height: 44px; padding: 0 20px; border-radius: 999px;
+      font-size: .95rem; font-weight: 550; letter-spacing: -0.01em;
+      transition: transform .15s ease, background .2s, box-shadow .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-dark { background: var(--ink); color: #fff; }
+    .btn-dark:hover { background: #222225; box-shadow: 0 8px 24px rgba(0,0,0,.14); }
+    .btn-line { border: 1px solid var(--line); background: #fff; }
+    .btn-line:hover { border-color: #d4d4d8; background: var(--soft); }
+    .btn-sm { height: 38px; padding: 0 16px; font-size: .88rem; }
+    .btn-lg { height: 54px; padding: 0 26px; font-size: 1rem; }
+    .link { font-size: .92rem; color: var(--muted); }
+    .link:hover { color: var(--ink); }
+
+    /* ---------- hero ---------- */
+    .hero { padding: 96px 0 40px; text-align: center; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--line); border-radius: 999px;
+      padding: 6px 14px 6px 10px; font-size: .82rem; color: var(--muted);
+      animation: rise .7s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(34,197,94,.14); }
+    h1 {
+      margin: 26px auto 0; max-width: 860px;
+      font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: 1.02;
+      font-weight: 650; letter-spacing: -0.05em;
+      animation: rise .8s .05s cubic-bezier(.2,.8,.2,1) both;
+    }
+    h1 span { color: var(--faint); }
+    .lead {
+      margin: 22px auto 0; max-width: 560px;
+      font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: var(--muted);
+      animation: rise .8s .1s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .ctas { margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; animation: rise .8s .15s cubic-bezier(.2,.8,.2,1) both; }
+    .fine { margin-top: 16px; font-size: .82rem; color: var(--faint); animation: rise .8s .2s cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- product preview (built in HTML/CSS) ---------- */
+    .preview { padding: 56px 0 24px; animation: rise 1s .25s cubic-bezier(.2,.8,.2,1) both; }
+    .window {
+      max-width: 980px; margin: 0 auto;
+      border: 1px solid var(--line); border-radius: 26px; overflow: hidden; background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 30px 80px -20px rgba(0,0,0,.18);
+      display: grid; grid-template-columns: 64px 280px 1fr; height: 520px;
+    }
+    .rail { border-right: 1px solid var(--line); background: #fafafa; display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 18px 0; }
+    .rail .mark { width: 36px; height: 36px; border-radius: 11px; }
+    .rail i { width: 36px; height: 36px; border-radius: 12px; display: block; background: var(--soft); }
+    .rail i.on { background: #ececee; }
+    .list { border-right: 1px solid var(--line); padding: 18px 12px; background: #fafafa; }
+    .list-head { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 14px; font-weight: 650; font-size: 1.1rem; letter-spacing: -0.03em; }
+    .plus { width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font-size: 1.15rem; font-weight: 400; }
+    .search { height: 34px; border-radius: 10px; background: #f0f0f1; margin: 0 6px 12px; }
+    .row { display: flex; gap: 11px; align-items: center; padding: 10px; border-radius: 16px; }
+    .row.active { background: var(--ink); color: #fff; }
+    .row.active .sub { color: rgba(255,255,255,.7); }
+    .av { position: relative; width: 42px; height: 42px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: .9rem; }
+    .av .p { position: absolute; right: -1px; bottom: -1px; width: 12px; height: 12px; border-radius: 50%; border: 2.5px solid #fafafa; }
+    .row.active .av .p { border-color: var(--ink); }
+    .p.on { background: var(--green); }
+    .p.idle { background: #fff; box-shadow: inset 0 0 0 2.5px var(--green); }
+    .p.off { background: #fff; box-shadow: inset 0 0 0 2.5px var(--faint); }
+    .name { font-size: .9rem; font-weight: 600; }
+    .sub { font-size: .8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+    .chat { display: flex; flex-direction: column; }
+    .chat-head { height: 62px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 11px; padding: 0 20px; }
+    .chat-head .av { width: 36px; height: 36px; }
+    .status { font-size: .76rem; color: var(--muted); }
+    .msgs { flex: 1; padding: 22px 22px 8px; display: flex; flex-direction: column; gap: 6px; justify-content: flex-end; }
+    .b { max-width: 70%; padding: 9px 14px; border-radius: 20px; font-size: .9rem; line-height: 1.38; opacity: 0; animation: pop .5s cubic-bezier(.2,.8,.2,1) forwards; }
+    .b.in { background: #efeff1; align-self: flex-start; border-bottom-left-radius: 6px; }
+    .b.out { background: var(--ink); color: #fff; align-self: flex-end; border-bottom-right-radius: 6px; }
+    .b:nth-child(1) { animation-delay: .7s; } .b:nth-child(2) { animation-delay: 1.2s; } .b:nth-child(3) { animation-delay: 1.8s; }
+    .b:nth-child(4) { animation-delay: 2.5s; } .typing { animation-delay: 3.1s !important; }
+    .meta { align-self: flex-end; font-size: .7rem; color: var(--faint); margin: -2px 4px 4px; opacity: 0; animation: pop .4s 2.2s forwards; }
+    .typing { display: flex; gap: 4px; padding: 13px 15px; }
+    .typing span { width: 7px; height: 7px; border-radius: 50%; background: #a1a1a6; animation: blink 1.2s infinite ease-in-out; }
+    .typing span:nth-child(2) { animation-delay: .15s; } .typing span:nth-child(3) { animation-delay: .3s; }
+    .composer { margin: 10px 18px 18px; height: 44px; border: 1px solid var(--line); border-radius: 22px; display: flex; align-items: center; padding: 0 16px; color: var(--faint); font-size: .88rem; }
+    @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+    @keyframes blink { 0%,60%,100% { opacity: .35; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+
+    /* ---------- sections ---------- */
+    section { padding: 110px 0 0; }
+    .eyebrow { font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+    h2 { margin-top: 12px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; letter-spacing: -0.045em; font-weight: 650; max-width: 640px; }
+    .grid { margin-top: 48px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .card { background: #fff; padding: 34px 30px; }
+    .card svg { width: 26px; height: 26px; stroke: var(--ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .card h3 { margin-top: 20px; font-size: 1.05rem; font-weight: 620; letter-spacing: -0.02em; }
+    .card p { margin-top: 8px; font-size: .93rem; color: var(--muted); }
+
+    .steps { margin-top: 48px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .step { border-top: 1px solid var(--ink); padding-top: 22px; }
+    .step b { font-size: .8rem; color: var(--faint); font-weight: 600; }
+    .step h3 { margin-top: 10px; font-size: 1.15rem; font-weight: 620; letter-spacing: -0.025em; }
+    .step p { margin-top: 6px; font-size: .93rem; color: var(--muted); }
+    .kbd { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: .85rem; vertical-align: -4px; }
+
+    .download {
+      margin-top: 110px; border-radius: 32px; background: var(--soft); padding: 72px 32px; text-align: center;
+    }
+    .download h2 { margin: 12px auto 0; }
+    .download .lead { animation: none; }
+    .download .ctas { animation: none; }
+    .options { margin: 36px auto 0; max-width: 560px; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+    .option {
+      display: flex; align-items: center; gap: 16px; padding: 16px 20px;
+      background: #fff; border: 1px solid var(--line); border-radius: 18px;
+      transition: transform .15s ease, border-color .2s, box-shadow .2s;
+    }
+    .option:hover { border-color: #d4d4d8; box-shadow: 0 10px 30px -12px rgba(0,0,0,.18); transform: translateY(-1px); }
+    .option:active { transform: scale(.99); }
+    .option:first-child { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .option:first-child small { color: rgba(255,255,255,.65); }
+    .opt-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--soft); flex: none; }
+    .option:first-child .opt-icon { background: rgba(255,255,255,.12); }
+    .opt-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+    .opt-text strong { font-size: 1rem; font-weight: 600; letter-spacing: -0.015em; }
+    .opt-text small { font-size: .82rem; color: var(--muted); }
+    .opt-tag { font-size: .72rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.14); }
+    .reqs { margin-top: 22px; display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; font-size: .84rem; color: var(--muted); }
+    .reqs span::before { content: "✓"; margin-right: 6px; color: var(--ink); }
+    .note { margin: 26px auto 0; max-width: 520px; font-size: .8rem; color: var(--faint); }
+
+    footer { margin-top: 110px; border-top: 1px solid var(--line); }
+    .foot { display: flex; align-items: center; gap: 16px; padding: 34px 0 44px; flex-wrap: wrap; }
+    .foot .brand { font-size: 1.05rem; }
+    .foot .made { margin-left: auto; font-size: .9rem; color: var(--muted); }
+    .foot .made strong { color: var(--ink); font-weight: 600; }
+    .foot small { width: 100%; color: var(--faint); font-size: .8rem; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 920px) {
+      .window { grid-template-columns: 1fr; height: auto; }
+      .rail, .list { display: none; }
+      .msgs { min-height: 380px; }
+      .grid, .steps { grid-template-columns: 1fr; }
+      .navlinks { display: none; }
+    }
+    @media (max-width: 520px) {
+      .hero { padding-top: 64px; }
+      .nav-cta .link { display: none; }
+      .foot .made { margin-left: 0; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <nav class="wrap">
+      <a class="brand" href="/" aria-label="George's Nappies home">
+        <span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M4.5 9.2C4.5 6.3 6.8 4 9.7 4h4.6c2.9 0 5.2 2.3 5.2 5.2v3.9c0 2.9-2.3 5.2-5.2 5.2h-2.6L7.8 21v-3.2a5.2 5.2 0 0 1-3.3-4.8V9.2Z"/><circle cx="9.6" cy="11" r="1.25" fill="#0b0b0c"/><circle cx="14.4" cy="11" r="1.25" fill="#0b0b0c"/></svg></span>
+        George's Nappies
+      </a>
+      <div class="navlinks">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#download">Download</a>
+      </div>
+      <div class="nav-cta">
+        <a class="btn btn-dark btn-sm" href="/download/windows">Download for Windows</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero wrap">
+      <span class="pill"><span class="dot"></span>georgesnappies.com · Now on Windows</span>
+      <h1>Messaging, <span>without</span> the&nbsp;noise.</h1>
+      <p class="lead">George's Nappies is a calm, private messenger for you and your friends. Real-time chats, group conversations and a username that's yours for good.</p>
+      <div class="ctas">
+        <a class="btn btn-dark btn-lg" href="/download/windows">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14"/></svg>
+          Download for Windows
+        </a>
+      </div>
+      <p class="fine">Free · Windows 10 &amp; 11</p>
+    </div>
+
+    <div class="preview wrap" aria-hidden="true">
+      <div class="window">
+        <div class="rail">
+          <span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M4.5 9.2C4.5 6.3 6.8 4 9.7 4h4.6c2.9 0 5.2 2.3 5.2 5.2v3.9c0 2.9-2.3 5.2-5.2 5.2h-2.6L7.8 21v-3.2a5.2 5.2 0 0 1-3.3-4.8V9.2Z"/></svg></span>
+          <i class="on"></i><i></i>
+        </div>
+        <div class="list">
+          <div class="list-head">Messages <span class="plus">+</span></div>
+          <div class="search"></div>
+          <div class="row active"><div class="av" style="background:#3a3a3c">M<span class="p on"></span></div><div><div class="name">Maya</div><div class="sub">See you at eight then ✨</div></div></div>
+          <div class="row"><div class="av" style="background:#636366">WP<span class="p idle"></span></div><div><div class="name">Weekend plans</div><div class="sub">Leo: I'll bring the snacks</div></div></div>
+          <div class="row"><div class="av" style="background:#1c1c1e">J<span class="p off"></span></div><div><div class="name">Jonah</div><div class="sub">You: haha exactly</div></div></div>
+          <div class="row"><div class="av" style="background:#8e8e93">A<span class="p on"></span></div><div><div class="name">Ava</div><div class="sub">Sent a photo</div></div></div>
+        </div>
+        <div class="chat">
+          <div class="chat-head"><div class="av" style="background:#3a3a3c">M<span class="p on" style="border-color:#fff"></span></div><div><div class="name">Maya</div><div class="status">Online</div></div></div>
+          <div class="msgs">
+            <div class="b in">Are we still on for tonight?</div>
+            <div class="b out">Wouldn't miss it. Booked the table for 8 🍝</div>
+            <div class="b in">Perfect. I'll grab the others on the way</div>
+            <div class="b out">See you at eight then ✨</div>
+            <div class="meta">Read</div>
+            <div class="b in typing"><span></span><span></span><span></span></div>
+          </div>
+          <div class="composer">Message Maya</div>
+        </div>
+      </div>
+    </div>
+
+    <section id="features" class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Features</p>
+        <h2>Everything you need. Nothing you don't.</h2>
+      </div>
+      <div class="grid reveal">
+        <div class="card">
+          <svg viewBox="0 0 24 24"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z"/></svg>
+          <h3>Truly real-time</h3>
+          <p>Messages, typing indicators and read receipts arrive the instant they happen.</p>
+        </div>
+        <div class="card">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9.5" r="2.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 14.2c2.6.1 4.6 1.9 5.2 4.8"/></svg>
+          <h3>Groups that flow</h3>
+          <p>Bring friends together, reply to anything, react, pin what matters.</p>
+        </div>
+        <div class="card">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/></svg>
+          <h3>Private by design</h3>
+          <p>Only people in a conversation can read it. No ads. Block, hide your status, turn off receipts.</p>
+        </div>
+        <div class="card">
+          <svg viewBox="0 0 24 24"><path d="M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm0 0v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1"/></svg>
+          <h3>Your name, forever</h3>
+          <p>Usernames are unique and permanent, and look-alikes are blocked, so nobody can pose as you.</p>
+        </div>
+        <div class="card">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18Z" fill="#0b0b0c"/></svg>
+          <h3>Pure black &amp; white</h3>
+          <p>A quiet interface in light or dark mode. The only colour is a green dot when friends are online.</p>
+        </div>
+        <div class="card">
+          <svg viewBox="0 0 24 24"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg>
+          <h3>Words that arrive alive</h3>
+          <p>New messages gently type themselves onto the screen. Prefer stillness? Turn it off.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">How it works</p>
+        <h2>Up and chatting in a minute.</h2>
+      </div>
+      <div class="steps reveal">
+        <div class="step"><b>01</b><h3>Download George's Nappies</h3><p>Click Download for Windows and run the installer. It takes a few seconds.</p></div>
+        <div class="step"><b>02</b><h3>Claim your username</h3><p>Pick a single-word name. It's checked live and it's yours for good.</p></div>
+        <div class="step"><b>03</b><h3>Tap <span class="kbd">+</span> to add friends</h3><p>Type a friend's exact username, send a request, and start talking.</p></div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div id="download" class="download reveal">
+        <p class="eyebrow">Download</p>
+        <h2>Get your hands on George's Nappies.</h2>
+        <p class="lead">Free for everyone. Install, create your account and start chatting.</p>
+        <div class="ctas">
+          <a class="btn btn-dark btn-lg" href="/download/windows">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.5-1.2L21 3v8.5h-9.5V4.3ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.5 0H21V21l-9.5-1.3v-7.2Z"/></svg>
+            Download for Windows
+          </a>
+        </div>
+        <div class="reqs"><span>Windows 10 &amp; 11</span><span>64-bit</span><span>Free</span><span>No ads</span></div>
+        <p class="note">George's Nappies is new and not yet code-signed, so Windows may show a SmartScreen notice the first time. Choose <em>More info → Run anyway</em>.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <a class="brand" href="#top">
+        <span class="mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M4.5 9.2C4.5 6.3 6.8 4 9.7 4h4.6c2.9 0 5.2 2.3 5.2 5.2v3.9c0 2.9-2.3 5.2-5.2 5.2h-2.6L7.8 21v-3.2a5.2 5.2 0 0 1-3.3-4.8V9.2Z"/><circle cx="9.6" cy="11" r="1.25" fill="#0b0b0c"/><circle cx="14.4" cy="11" r="1.25" fill="#0b0b0c"/></svg></span>
+        George's Nappies
+      </a>
+      <span class="link">georgesnappies.com</span>
+      <span class="made">Made by <strong>Santiago Rojas</strong></span>
+      <small>© 2026 George's Nappies. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script src="/site.js" defer></script>
+</body>
+</html>

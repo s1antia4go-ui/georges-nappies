@@ -1,0 +1,11 @@
+**/node_modules
+**/__pycache__
+**/.venv
+frontend/dist
+desktop
+backend/.env
+backend/uploads
+backend/downloads
+backend/tests
+.claude
+*.exe

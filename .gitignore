@@ -1,0 +1,14 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+backend/uploads/
+frontend/node_modules/
+frontend/dist/
+desktop/node_modules/
+desktop/dist/
+backend/downloads/
+desktop/resources/
+*.exe
+*.zip
+.claude/

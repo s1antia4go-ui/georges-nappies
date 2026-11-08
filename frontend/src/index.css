@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 246 246 246;
+  --panel: 255 255 255;
+  --raised: 240 240 241;
+  --line: 228 228 230;
+  --ink: 17 17 19;
+  --muted: 110 110 115;
+  --faint: 160 160 165;
+  /* Monochrome by default: black in light mode, white in dark mode. */
+  --accent: 17 17 19;
+  --accent-ink: 255 255 255;
+  --bubble: 236 236 238;
+  --online: 34 197 94; /* the one colour: presence green */
+  --danger: 225 60 70;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+[data-theme="dark"] {
+  --bg: 8 8 9;
+  --panel: 17 17 18;
+  --raised: 28 28 30;
+  --line: 40 40 43;
+  --ink: 240 240 241;
+  --muted: 152 152 157;
+  --faint: 100 100 106;
+  --bubble: 34 34 37;
+  --accent: 244 244 245;
+  --accent-ink: 12 12 14;
+  --online: 52 211 110;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-bg text-ink font-sans antialiased;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01"; /* Inter: single-storey a, open digits */
+  letter-spacing: -0.006em;
+  overscroll-behavior: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.25);
+}
+
+/* Slim, quiet scrollbars */
+.scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--ink) / 0.14) transparent;
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background: rgb(var(--ink) / 0.14);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent) / 0.6);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@layer components {
+  /* The George's Nappies wordmark: brand typeface, heavy and tightly set. */
+  .brand-wordmark {
+    font-family: "Bricolage Grotesque Variable", "Inter Variable", sans-serif;
+    font-weight: 780;
+    font-stretch: 86%;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 h-10 text-[0.9rem] font-medium transition-all duration-150 select-none disabled:opacity-50 disabled:pointer-events-none active:scale-[.97];
+  }
+  .btn-primary {
+    @apply btn bg-accent text-accent-ink hover:brightness-110 shadow-sm;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-ink hover:bg-ink/5;
+  }
+  .btn-soft {
+    @apply btn bg-ink/[.06] text-ink hover:bg-ink/10;
+  }
+  .btn-danger {
+    @apply btn bg-danger/10 text-danger hover:bg-danger/15;
+  }
+  .icon-btn {
+    @apply inline-flex items-center justify-center h-9 w-9 rounded-full text-muted hover:text-ink hover:bg-ink/[.06] transition-all duration-150 active:scale-90;
+  }
+  .input {
+    @apply w-full h-11 rounded-xl bg-raised/70 border border-transparent px-3.5 text-[0.95rem] text-ink placeholder:text-faint outline-none transition-all duration-200 focus:bg-panel focus:border-accent/50 focus:ring-4 focus:ring-accent/10;
+  }
+  .label {
+    @apply block text-[0.78rem] font-medium text-muted mb-1.5 tracking-wide;
+  }
+  .card {
+    @apply bg-panel rounded-2xl border border-line/70;
+  }
+  .section-title {
+    @apply text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-faint;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes msg-in-right {
+  from { opacity: 0; transform: translate(10px, 8px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes msg-in-left {
+  from { opacity: 0; transform: translate(-10px, 8px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .35; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes caret { 50% { opacity: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes status-pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+
+.anim-msg-right { animation: msg-in-right 280ms var(--ease) both; transform-origin: bottom right; }
+.anim-msg-left { animation: msg-in-left 280ms var(--ease) both; transform-origin: bottom left; }
+.anim-fade { animation: fade-in 200ms var(--ease) both; }
+.anim-rise { animation: rise-in 260ms var(--ease) both; }
+.anim-pop { animation: pop-in 220ms var(--ease) both; }
+.anim-status { animation: status-pop 220ms var(--ease) both; }
+.typing-dot { animation: typing-dot 1.2s infinite ease-in-out; }
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .3s; }
+.spinner { animation: spin .8s linear infinite; }
+
+/* Text reveal: remaining text keeps its space (no layout jumps) but is invisible. */
+.reveal-rest { color: transparent; }
+.reveal-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-right: -2px; /* zero net width: the caret never changes line wrapping */
+  vertical-align: -0.15em;
+  background: currentColor;
+  opacity: .6;
+  animation: caret .9s steps(1) infinite;
+}
+
+/* Composer caret */
+.composer textarea { caret-color: rgb(var(--accent)); }
+
+/* Reduced motion: keep fades, drop movement. */
+[data-motion="reduced"] .anim-msg-right,
+[data-motion="reduced"] .anim-msg-left,
+[data-motion="reduced"] .anim-rise,
+[data-motion="reduced"] .anim-pop {
+  animation: fade-in 120ms linear both;
+}
+[data-motion="reduced"] .typing-dot { animation-duration: 2.4s; }
+[data-motion="reduced"] * { transition-duration: 0ms !important; scroll-behavior: auto !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-msg-right, .anim-msg-left, .anim-rise, .anim-pop { animation: fade-in 120ms linear both; }
+}
+
