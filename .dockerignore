@@ -5,7 +5,6 @@ frontend/dist
 desktop
 backend/.env
 backend/uploads
-backend/downloads
 backend/tests
 .claude
-*.exe
+backend/downloads/*.zip

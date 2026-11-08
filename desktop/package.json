@@ -1,12 +1,12 @@
 {
   "name": "georges-nappies-desktop",
   "productName": "George's Nappies",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "George's Nappies messaging app for Windows",
   "author": "Santiago Rojas",
   "main": "main.js",
   "private": true,
-  "serverUrl": "https://georgesnappies.tailb9c54f.ts.net",
+  "serverUrl": "https://georges-nappies.onrender.com",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder --win nsis --x64"
