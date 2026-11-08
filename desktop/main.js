@@ -4,6 +4,7 @@
 // (set as "serverUrl" in package.json at build time). Nothing runs locally and
 // nothing needs setting up on the user's PC.
 const { app, BrowserWindow, Menu, nativeTheme, net, session, shell } = require("electron");
+const fs = require("fs");
 const path = require("path");
 
 const SERVER = (require("./package.json").serverUrl || "http://127.0.0.1:8000").replace(/\/+$/, "");
@@ -21,11 +22,79 @@ function offlinePage() {
   return "data:text/html;charset=utf-8," + encodeURIComponent(html);
 }
 
+// George's Nappies' own loading screen, shown only while the server is waking up
+// (free hosting sleeps when idle). Brand font is embedded so it looks right offline too.
+function loadingPage() {
+  const dark = nativeTheme.shouldUseDarkColors;
+  const bg = dark ? "#080809" : "#f6f6f6";
+  const ink = dark ? "#f4f4f5" : "#111113";
+  let fontFace = "";
+  try {
+    const font = fs.readFileSync(path.join(__dirname, "build", "brand.woff2")).toString("base64");
+    fontFace = `@font-face{font-family:Brand;src:url(data:font/woff2;base64,${font}) format("woff2");font-weight:200 800;font-stretch:75% 100%}`;
+  } catch {
+    /* fall back to system font */
+  }
+  const html = `<!doctype html><meta charset="utf-8"><title>George's Nappies</title>
+  <style>${fontFace}
+  html,body{margin:0;height:100%;background:${bg};color:${ink};font-family:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;overflow:hidden}
+  main{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;animation:in .6s cubic-bezier(.2,.8,.2,1) both}
+  .mark{width:84px;height:84px;border-radius:26px;background:${ink};display:grid;place-items:center;animation:breathe 2.4s ease-in-out infinite}
+  .mark svg{width:52px;height:52px}
+  h1{margin:0;font-family:Brand,"Segoe UI",sans-serif;font-weight:780;font-stretch:86%;letter-spacing:-.04em;font-size:34px}
+  .dots{display:flex;gap:7px}.dots span{width:7px;height:7px;border-radius:50%;background:${ink};opacity:.25;animation:dot 1.2s infinite ease-in-out}
+  .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+  footer{position:fixed;bottom:26px;left:0;right:0;text-align:center;font-size:12px;opacity:.45;letter-spacing:.02em}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes breathe{50%{transform:scale(.94)}}
+  @keyframes dot{0%,60%,100%{opacity:.25;transform:none}30%{opacity:1;transform:translateY(-4px)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+  <main>
+    <div class="mark"><svg viewBox="0 0 24 24" fill="${bg}"><path d="M4.5 9.2C4.5 6.3 6.8 4 9.7 4h4.6c2.9 0 5.2 2.3 5.2 5.2v3.9c0 2.9-2.3 5.2-5.2 5.2h-2.6L7.8 21v-3.2a5.2 5.2 0 0 1-3.3-4.8V9.2Z"/><circle cx="9.6" cy="11" r="1.25" fill="${ink}"/><circle cx="14.4" cy="11" r="1.25" fill="${ink}"/></svg></div>
+    <h1>George's Nappies</h1>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </main>
+  <footer>Made by Santiago Rojas</footer>`;
+  return "data:text/html;charset=utf-8," + encodeURIComponent(html);
+}
+
+// True when the George's Nappies server is up and answering (not the host's wake-up page).
+async function serverAwake(timeoutMs) {
+  try {
+    const r = await net.fetch(`${SERVER}/api/health`, { signal: AbortSignal.timeout(timeoutMs), cache: "no-store" });
+    if (!r.ok) return false;
+    const body = await r.json();
+    return body && body.ok === true;
+  } catch {
+    return false;
+  }
+}
+
+// Open the app straight away if the server is awake; otherwise show our loading
+// screen and switch to the app the moment the server answers.
+async function openApp() {
+  clearTimeout(retryTimer);
+  if (!net.isOnline()) {
+    win.loadURL(offlinePage());
+    if (!win.isVisible()) win.show();
+    return scheduleRetry();
+  }
+  if (await serverAwake(1500)) return win.loadURL(APP_URL);
+  win.loadURL(loadingPage());
+  if (!win.isVisible()) win.show();
+  const deadline = Date.now() + 3 * 60 * 1000;
+  while (win && Date.now() < deadline) {
+    if (await serverAwake(10000)) return win.loadURL(APP_URL);
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+  if (win) win.loadURL(APP_URL); // fall back to a normal load after 3 minutes
+}
+
 function scheduleRetry() {
   clearTimeout(retryTimer);
   retryTimer = setTimeout(() => {
     if (!win) return;
-    if (net.isOnline()) win.loadURL(APP_URL);
+    if (net.isOnline()) openApp();
     else scheduleRetry();
   }, 3000);
 }
@@ -67,14 +136,14 @@ function createWindow() {
     return { action: "deny" };
   });
 
-  win.loadURL(APP_URL);
+  openApp();
 }
 
 const template = [
   {
     label: "File",
     submenu: [
-      { label: "Reload", accelerator: "F5", click: () => win && win.loadURL(APP_URL) },
+      { label: "Reload", accelerator: "F5", click: () => win && openApp() },
       { label: "Open website", click: () => shell.openExternal(SERVER) },
       { type: "separator" },
       { role: "quit" },

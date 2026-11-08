@@ -24,3 +24,7 @@
   );
   items.forEach((el) => io.observe(el));
 })();
+
+// Wake the George's Nappies app server in the background while someone is on the
+// website, so the app opens instantly when they download it or sign in.
+fetch("https://georges-nappies.onrender.com/api/health", { mode: "no-cors", cache: "no-store" }).catch(() => {});

@@ -1,7 +1,7 @@
 {
   "name": "georges-nappies-desktop",
   "productName": "George's Nappies",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "George's Nappies messaging app for Windows",
   "author": "Santiago Rojas",
   "main": "main.js",
@@ -20,7 +20,7 @@
     "productName": "George's Nappies",
     "copyright": "Made by Santiago Rojas",
     "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["main.js", "package.json", "build/icon.png", "build/icon.ico"],
+    "files": ["main.js", "package.json", "build/icon.png", "build/icon.ico", "build/brand.woff2"],
     "win": { "target": ["nsis"], "icon": "build/icon.ico", "publisherName": "Santiago Rojas" },
     "nsis": {
       "oneClick": false,
