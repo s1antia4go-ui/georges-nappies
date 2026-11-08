@@ -1,0 +1,20 @@
+# Keeps the George's Nappies server on Render's free plan awake.
+# Free instances sleep after ~15 minutes without traffic and take ~50s to wake;
+# a light health check every 5 minutes prevents that. One service running 24/7
+# fits inside Render's 750 free hours per month.
+name: Keep server awake
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Health check
+        run: curl --silent --show-error --max-time 120 --retry 2 https://georges-nappies.onrender.com/api/health

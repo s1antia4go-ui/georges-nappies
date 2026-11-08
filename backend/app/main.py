@@ -85,6 +85,7 @@ async def health():
 
 # Windows download for the website's "Download" button.
 @app.get("/download/windows", include_in_schema=False)
+@app.get("/GeorgesNappies-Setup.exe", include_in_schema=False)
 async def download_windows():
     if settings.download_url:
         return RedirectResponse(settings.download_url, status_code=302)

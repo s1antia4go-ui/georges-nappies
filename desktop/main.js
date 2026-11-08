@@ -40,7 +40,7 @@ function createWindow() {
     title: "George's Nappies",
     backgroundColor: nativeTheme.shouldUseDarkColors ? "#080809" : "#f6f6f6",
     autoHideMenuBar: true,
-    icon: path.join(__dirname, "build", "icon.png"),
+    icon: path.join(__dirname, "build", "icon.ico"),
     webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false, spellcheck: true },
   });
 
