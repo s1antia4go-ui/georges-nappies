@@ -1,0 +1,10 @@
+{
+  "appId": "com.georgesnappies.app",
+  "appName": "George's Nappies",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": ["georges-nappies.onrender.com"]
+  },
+  "android": { "backgroundColor": "#080809" }
+}

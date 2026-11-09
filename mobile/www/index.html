@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>George's Nappies</title>
+<style>
+@font-face{font-family:Brand;src:url(brand.woff2) format("woff2");font-weight:200 800;font-stretch:75% 100%}
+html,body{margin:0;height:100%;background:#080809;color:#f4f4f5;font-family:Roboto,system-ui,sans-serif;overflow:hidden}
+main{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+.mark{width:84px;height:84px;border-radius:26px;background:#f4f4f5;display:grid;place-items:center;animation:breathe 2.4s ease-in-out infinite}
+.mark svg{width:52px;height:52px}
+h1{margin:0;font-family:Brand,Roboto,sans-serif;font-weight:780;font-stretch:86%;letter-spacing:-.04em;font-size:32px}
+.dots{display:flex;gap:7px}.dots span{width:7px;height:7px;border-radius:50%;background:#f4f4f5;opacity:.25;animation:dot 1.2s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+#note{min-height:18px;font-size:13px;opacity:.6}
+footer{position:fixed;bottom:26px;left:0;right:0;text-align:center;font-size:12px;opacity:.45}
+@keyframes breathe{50%{transform:scale(.94)}}
+@keyframes dot{0%,60%,100%{opacity:.25;transform:none}30%{opacity:1;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="mark"><svg viewBox="0 0 24 24" fill="#080809"><path d="M4.5 9.2C4.5 6.3 6.8 4 9.7 4h4.6c2.9 0 5.2 2.3 5.2 5.2v3.9c0 2.9-2.3 5.2-5.2 5.2h-2.6L7.8 21v-3.2a5.2 5.2 0 0 1-3.3-4.8V9.2Z"/><circle cx="9.6" cy="11" r="1.25" fill="#f4f4f5"/><circle cx="14.4" cy="11" r="1.25" fill="#f4f4f5"/></svg></div>
+  <h1>George's Nappies</h1>
+  <div class="dots"><span></span><span></span><span></span></div>
+  <div id="note"></div>
+</main>
+<footer>Made by Santiago Rojas</footer>
+<script>
+// Waits for the George's Nappies server, then opens the live app. A sleeping host answers
+// with its own page (no CORS header), so only the real server passes this check.
+var SERVER = "https://georges-nappies.onrender.com";
+var note = document.getElementById("note");
+function check() {
+  note.textContent = navigator.onLine ? "" : "You're offline. Waiting for a connection…";
+  fetch(SERVER + "/api/health", { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (b) { if (b && b.ok === true) location.replace(SERVER + "/app/"); else retry(); })
+    .catch(retry);
+}
+function retry() { setTimeout(check, 1500); }
+check();
+</script>
+</body>
+</html>

@@ -39,6 +39,11 @@ body,
   height: 100%;
 }
 
+/* Phone browsers: follow the visible screen as address bars and keyboards appear. */
+#root {
+  height: 100dvh;
+}
+
 body {
   @apply bg-bg text-ink font-sans antialiased;
   -webkit-font-smoothing: antialiased;

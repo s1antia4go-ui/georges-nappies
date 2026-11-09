@@ -209,7 +209,7 @@ export const MessageRow = memo(function MessageRow({ m, conv, meId, members, fir
         <div
           className={`absolute top-1/2 -translate-y-1/2 z-10 flex items-center gap-0.5 rounded-full border border-line bg-panel p-0.5 shadow-soft transition-all duration-150 ${
             menu || picker ? "opacity-100" : "pointer-events-none opacity-0 group-hover/msg:pointer-events-auto group-hover/msg:opacity-100"
-          } ${mine ? "right-full mr-2" : "left-full ml-2"}`}
+          } ${mine ? "right-0 sm:right-full sm:mr-2" : "left-0 sm:left-full sm:ml-2"} max-sm:top-auto max-sm:bottom-full max-sm:mb-1 max-sm:translate-y-0`}
         >
           <button className="icon-btn h-7 w-7" title="React" onClick={() => setPicker((p) => !p)}>
             <Icon name="smile" size={16} />

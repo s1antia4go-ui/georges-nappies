@@ -29,10 +29,14 @@ export function notify(title: string, body: string, onClick?: () => void) {
   if (prefs.notify_sounds !== false) chime();
   if (document.visibilityState === "visible" && document.hasFocus()) return;
   if (!("Notification" in window) || Notification.permission !== "granted") return;
-  const n = new Notification(title, { body: prefs.notify_previews === false ? "New message" : body.slice(0, 140), icon: `${import.meta.env.BASE_URL}favicon.svg`, silent: true });
-  n.onclick = () => {
-    window.focus();
-    onClick?.();
-    n.close();
-  };
+  try {
+    const n = new Notification(title, { body: prefs.notify_previews === false ? "New message" : body.slice(0, 140), icon: `${import.meta.env.BASE_URL}favicon.svg`, silent: true });
+    n.onclick = () => {
+      window.focus();
+      onClick?.();
+      n.close();
+    };
+  } catch {
+    /* Android Chrome doesn't allow page-created notifications. */
+  }
 }

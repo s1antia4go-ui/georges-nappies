@@ -80,7 +80,8 @@ app.include_router(ws.router)
 
 @app.get("/api/health")
 async def health():
-    return {"ok": True}
+    # Open to any origin so the Android app's start screen can tell when the server is awake.
+    return JSONResponse({"ok": True}, headers={"Access-Control-Allow-Origin": "*"})
 
 
 # Windows download for the website's "Download" button.
