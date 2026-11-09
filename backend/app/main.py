@@ -96,6 +96,14 @@ async def download_windows():
     return FileResponse(exe, media_type="application/vnd.microsoft.portable-executable", filename="GeorgesNappies-Setup.exe")
 
 
+@app.get("/GeorgesNappies.apk", include_in_schema=False)
+async def download_android():
+    apk = settings.site_dir / "GeorgesNappies.apk"
+    if not apk.is_file():
+        return JSONResponse({"detail": "The Android download isn't available on this server yet."}, status_code=404)
+    return FileResponse(apk, media_type="application/vnd.android.package-archive", filename="GeorgesNappies.apk")
+
+
 @app.get("/download/windows-zip", include_in_schema=False)
 async def download_windows_zip():
     if settings.download_zip_url:
